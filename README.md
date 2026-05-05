@@ -4,18 +4,6 @@
 
 ---
 
-## System Requirements
-
-| Requirement | Minimum | Recommended |
-|-------------|---------|-------------|
-| Python | 3.9+ | 3.11+ |
-| RAM | 4 GB | 8 GB |
-| Disk | 500 MB | 2 GB |
-| Internet | Required for fetch | Required for fetch |
-| OS | Windows 10 / macOS 12 / Ubuntu 20 | Any modern OS |
-
----
-
 ## Step 0 — Get the code
 
 Download all project files and place them in one folder:
