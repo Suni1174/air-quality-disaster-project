@@ -10,11 +10,9 @@ Download all project files and place them in one folder:
 
 ```
 project/
-├── 01_fetch_data.py
-├── 02_run_pipeline.py
-├── 03_dashboard.html
-├── 03_serve_dashboard.py
-├── requirements.txt
+├── data.py
+├── run.py
+├── 03_dashboard.py
 └── README.md
 ```
 
@@ -23,10 +21,10 @@ project/
 ## Step 1 — Install dependencies
 
 ```bash
-pip install -r requirements.txt
+pip install pandas numpy scikit-learn xgboost statsmodels requests tqdm joblib scipy dash plotly pyarrow
 ```
 
-The `requirements.txt` contains:
+Install these packages:
 ```
 pandas>=2.0
 numpy>=1.24
@@ -38,7 +36,7 @@ tqdm>=4.66
 joblib>=1.3
 ```
 
-**No pyarrow or parquet libraries required** — the pipeline uses plain CSV files.
+**Note:** pyarrow is required — the pipeline uses parquet files internally.
 
 ---
 
@@ -47,7 +45,7 @@ joblib>=1.3
 ### Option A — Immediate start (no setup, recommended for first run)
 
 ```bash
-python 01_fetch_data.py
+python data.py
 ```
 
 This fetches from **Open-Meteo** (zero authentication):
@@ -73,7 +71,7 @@ Expected output:
 3. Run:
 
 ```bash
-python 01_fetch_data.py --openaq-key YOUR_API_KEY_HERE
+python data.py --openaq-key YOUR_API_KEY_HERE
 ```
 
 This adds real CPCB monitoring station measurements (PM2.5, PM10, NO2, SO2, CO, O3) going back to 2016. The fetcher automatically searches for stations within 20–30 km of each city and paginates through the full history.
@@ -86,7 +84,7 @@ This adds real CPCB monitoring station measurements (PM2.5, PM10, NO2, SO2, CO, 
 2. Run:
 
 ```bash
-python 01_fetch_data.py --openaq-key YOUR_KEY --waqi-token YOUR_WAQI_TOKEN
+python data.py --openaq-key YOUR_KEY --waqi-token YOUR_WAQI_TOKEN
 ```
 
 ---
@@ -101,7 +99,7 @@ pip install earthengine-api
 earthengine authenticate
 
 # Then run with your GCP project ID
-python 01_fetch_data.py --gee --gee-project YOUR_GCP_PROJECT_ID
+python data.py --gee --gee-project YOUR_GCP_PROJECT_ID
 ```
 
 GEE datasets used:
@@ -140,7 +138,7 @@ data/
 
 Then run:
 ```bash
-python 01_fetch_data.py --cpcb data/cpcb/
+python data.py --cpcb data/cpcb/
 ```
 
 Recommended CPCB stations:
@@ -157,7 +155,7 @@ Recommended CPCB stations:
 ### Combining all sources (maximum coverage)
 
 ```bash
-python 01_fetch_data.py \
+python data.py \
   --openaq-key YOUR_KEY \
   --gee \
   --gee-project YOUR_GCP_PROJECT_ID \
@@ -173,7 +171,7 @@ Data is automatically merged with column-level priority:
 ## Step 3 — Run the ML pipeline
 
 ```bash
-python 02_run_pipeline.py
+python run.py
 ```
 
 This runs the complete machine learning pipeline in sequence:
@@ -249,16 +247,11 @@ Expected console output:
 ## Step 4 — Open the dashboard
 
 ```bash
-python 03_serve_dashboard.py
+python 03_dashboard.py
 ```
 
-This starts a local HTTP server and opens the dashboard automatically at:
-**http://localhost:8080/03_dashboard.html**
-
-To use a different port:
-```bash
-python 03_serve_dashboard.py --port 9000
-```
+This starts the Dash app. Open in your browser at:
+**http://127.0.0.1:8050**
 
 The dashboard has 6 pages:
 
@@ -279,7 +272,7 @@ The three included CSV files were generated from the simulated dataset (which fa
 
 ```bash
 # This was run to produce the dataset CSVs:
-python 02_run_pipeline.py
+python run.py
 # The pipeline auto-generates the CSVs from whatever data was fetched
 ```
 
@@ -305,11 +298,9 @@ print(df.groupby("city")["AQI"].agg(["mean","max","count"]))
 
 ```
 project/
-├── 01_fetch_data.py
-├── 02_run_pipeline.py
-├── 03_dashboard.html
-├── 03_serve_dashboard.py
-├── requirements.txt
+├── data.py
+├── run.py
+├── 03_dashboard.py
 ├── README.md
 │
 ├── data/
